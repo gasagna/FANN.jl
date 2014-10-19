@@ -15,4 +15,5 @@ y = [1.0, 0.0, 0.0, 1.0]
 # create dataset
 dset = DataSet(X, y)
 
-train!(net, dset; d=1)
+# train
+train!(net, dset)
