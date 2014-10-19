@@ -22,6 +22,6 @@ include("mlp.jl")
 
 # exports
 export MLP, DataSet
-export train!, mse
+export train!, predict, mse, show
 
 end

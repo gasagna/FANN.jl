@@ -32,7 +32,7 @@ function DataSet(X::Matrix, y::Vector)
 
 
 	# manually change input and output pointers: Is this good?
-	tmp =  unsafe_load(data)
+	tmp = unsafe_load(data)
 	tmp.input = pointer([pointer(X, i) for i = 1:num_input:length(X)])
 	tmp.output = pointer([pointer(y, i) for i = 1:length(y)])
 
