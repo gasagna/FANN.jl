@@ -7,9 +7,6 @@ else
     error("Fann not properly installed. Please run Pkg.build(\"FANN\")")
 end
 
-# exports
-export MLP, train!, mse
-
 # C FILE pointer
 immutable FILE
     ptr::Ptr{Void}
@@ -20,6 +17,11 @@ include("libfann_common.jl")
 include("libfann.jl")
 
 # load files
+include("data.jl")
 include("mlp.jl")
+
+# exports
+export MLP, DataSet
+export train!, mse
 
 end
