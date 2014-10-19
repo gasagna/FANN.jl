@@ -1,5 +1,12 @@
 module FANN
 
+# from sundials code
+if isfile(joinpath(dirname(dirname(@__FILE__)),"deps","deps.jl"))
+    include("../deps/deps.jl")
+else
+    error("Fann not properly installed. Please run Pkg.build(\"FANN\")")
+end
+
 # exports
 export MLP, train!, mse
 
@@ -9,7 +16,6 @@ immutable FILE
 end
 
 # load library wrapper
-const libfann = "/usr/lib/libdoublefann.so"
 include("libfann_common.jl")
 include("libfann.jl")
 
