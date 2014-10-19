@@ -1,4 +1,4 @@
-# Julia wrapper for header: /usr/include/fann.h
+# Julia wrapper for header: ../deps/usr/include/fann.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
 
@@ -102,6 +102,10 @@ function fann_update_weights_irpropm(ann::Ptr{fann},first_weight::Uint32,past_en
     ccall((:fann_update_weights_irpropm,libfann),Void,(Ptr{fann},Uint32,Uint32),ann,first_weight,past_end)
 end
 
+function fann_update_weights_sarprop(ann::Ptr{fann},epoch::Uint32,first_weight::Uint32,past_end::Uint32)
+    ccall((:fann_update_weights_sarprop,libfann),Void,(Ptr{fann},Uint32,Uint32,Uint32),ann,epoch,first_weight,past_end)
+end
+
 function fann_clear_train_arrays(ann::Ptr{fann})
     ccall((:fann_clear_train_arrays,libfann),Void,(Ptr{fann},),ann)
 end
@@ -136,6 +140,10 @@ end
 
 function fann_install_candidate(ann::Ptr{fann})
     ccall((:fann_install_candidate,libfann),Void,(Ptr{fann},),ann)
+end
+
+function fann_check_input_output_sizes(ann::Ptr{fann},data::Ptr{fann_train_data})
+    ccall((:fann_check_input_output_sizes,libfann),Cint,(Ptr{fann},Ptr{fann_train_data}),ann,data)
 end
 
 function fann_initialize_candidates(ann::Ptr{fann})
@@ -188,6 +196,10 @@ end
 
 function fann_read_train_from_file(filename::Ptr{Uint8})
     ccall((:fann_read_train_from_file,libfann),Ptr{fann_train_data},(Ptr{Uint8},),filename)
+end
+
+function fann_create_train(num_data::Uint32,num_input::Uint32,num_output::Uint32)
+    ccall((:fann_create_train,libfann),Ptr{fann_train_data},(Uint32,Uint32,Uint32),num_data,num_input,num_output)
 end
 
 function fann_create_train_from_callback(num_data::Uint32,num_input::Uint32,num_output::Uint32,user_function::Ptr{Void})
@@ -434,6 +446,38 @@ function fann_set_rprop_delta_zero(ann::Ptr{fann},rprop_delta_max::Cfloat)
     ccall((:fann_set_rprop_delta_zero,libfann),Void,(Ptr{fann},Cfloat),ann,rprop_delta_max)
 end
 
+function fann_get_sarprop_weight_decay_shift(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_weight_decay_shift,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_weight_decay_shift(ann::Ptr{fann},sarprop_weight_decay_shift::Cfloat)
+    ccall((:fann_set_sarprop_weight_decay_shift,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_weight_decay_shift)
+end
+
+function fann_get_sarprop_step_error_threshold_factor(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_step_error_threshold_factor,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_step_error_threshold_factor(ann::Ptr{fann},sarprop_step_error_threshold_factor::Cfloat)
+    ccall((:fann_set_sarprop_step_error_threshold_factor,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_step_error_threshold_factor)
+end
+
+function fann_get_sarprop_step_error_shift(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_step_error_shift,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_step_error_shift(ann::Ptr{fann},sarprop_step_error_shift::Cfloat)
+    ccall((:fann_set_sarprop_step_error_shift,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_step_error_shift)
+end
+
+function fann_get_sarprop_temperature(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_temperature,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_temperature(ann::Ptr{fann},sarprop_temperature::Cfloat)
+    ccall((:fann_set_sarprop_temperature,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_temperature)
+end
+
 function fann_cascadetrain_on_data(ann::Ptr{fann},data::Ptr{fann_train_data},max_neurons::Uint32,neurons_between_reports::Uint32,desired_error::Cfloat)
     ccall((:fann_cascadetrain_on_data,libfann),Void,(Ptr{fann},Ptr{fann_train_data},Uint32,Uint32,Cfloat),ann,data,max_neurons,neurons_between_reports,desired_error)
 end
@@ -498,12 +542,28 @@ function fann_set_cascade_max_out_epochs(ann::Ptr{fann},cascade_max_out_epochs::
     ccall((:fann_set_cascade_max_out_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_max_out_epochs)
 end
 
+function fann_get_cascade_min_out_epochs(ann::Ptr{fann})
+    ccall((:fann_get_cascade_min_out_epochs,libfann),Uint32,(Ptr{fann},),ann)
+end
+
+function fann_set_cascade_min_out_epochs(ann::Ptr{fann},cascade_min_out_epochs::Uint32)
+    ccall((:fann_set_cascade_min_out_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_min_out_epochs)
+end
+
 function fann_get_cascade_max_cand_epochs(ann::Ptr{fann})
     ccall((:fann_get_cascade_max_cand_epochs,libfann),Uint32,(Ptr{fann},),ann)
 end
 
 function fann_set_cascade_max_cand_epochs(ann::Ptr{fann},cascade_max_cand_epochs::Uint32)
     ccall((:fann_set_cascade_max_cand_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_max_cand_epochs)
+end
+
+function fann_get_cascade_min_cand_epochs(ann::Ptr{fann})
+    ccall((:fann_get_cascade_min_cand_epochs,libfann),Uint32,(Ptr{fann},),ann)
+end
+
+function fann_set_cascade_min_cand_epochs(ann::Ptr{fann},cascade_min_cand_epochs::Uint32)
+    ccall((:fann_set_cascade_min_cand_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_min_cand_epochs)
 end
 
 function fann_get_cascade_num_candidates(ann::Ptr{fann})
@@ -568,6 +628,10 @@ end
 
 function fann_destroy(ann::Ptr{fann})
     ccall((:fann_destroy,libfann),Void,(Ptr{fann},),ann)
+end
+
+function fann_copy(ann::Ptr{fann})
+    ccall((:fann_copy,libfann),Ptr{fann},(Ptr{fann},),ann)
 end
 
 function fann_run(ann::Ptr{fann},input::Ptr{fann_type})
@@ -645,19 +709,19 @@ end
 function fann_get_user_data(ann::Ptr{fann})
     ccall((:fann_get_user_data,libfann),Ptr{Void},(Ptr{fann},),ann)
 end
-# Julia wrapper for header: /usr/include/fann_activation.h
+# Julia wrapper for header: ../deps/usr/include/fann_activation.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: /usr/include/fann_cascade.h
+# Julia wrapper for header: ../deps/usr/include/fann_cascade.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: /usr/include/fann_data.h
+# Julia wrapper for header: ../deps/usr/include/fann_data.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: /usr/include/fann_error.h
+# Julia wrapper for header: ../deps/usr/include/fann_error.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: /usr/include/fann_internal.h
+# Julia wrapper for header: ../deps/usr/include/fann_internal.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
 
@@ -737,6 +801,10 @@ function fann_update_weights_irpropm(ann::Ptr{fann},first_weight::Uint32,past_en
     ccall((:fann_update_weights_irpropm,libfann),Void,(Ptr{fann},Uint32,Uint32),ann,first_weight,past_end)
 end
 
+function fann_update_weights_sarprop(ann::Ptr{fann},epoch::Uint32,first_weight::Uint32,past_end::Uint32)
+    ccall((:fann_update_weights_sarprop,libfann),Void,(Ptr{fann},Uint32,Uint32,Uint32),ann,epoch,first_weight,past_end)
+end
+
 function fann_clear_train_arrays(ann::Ptr{fann})
     ccall((:fann_clear_train_arrays,libfann),Void,(Ptr{fann},),ann)
 end
@@ -773,6 +841,10 @@ function fann_install_candidate(ann::Ptr{fann})
     ccall((:fann_install_candidate,libfann),Void,(Ptr{fann},),ann)
 end
 
+function fann_check_input_output_sizes(ann::Ptr{fann},data::Ptr{fann_train_data})
+    ccall((:fann_check_input_output_sizes,libfann),Cint,(Ptr{fann},Ptr{fann_train_data}),ann,data)
+end
+
 function fann_initialize_candidates(ann::Ptr{fann})
     ccall((:fann_initialize_candidates,libfann),Cint,(Ptr{fann},),ann)
 end
@@ -784,13 +856,16 @@ end
 function fann_allocate_scale(ann::Ptr{fann})
     ccall((:fann_allocate_scale,libfann),Cint,(Ptr{fann},),ann)
 end
-# Julia wrapper for header: /usr/include/fann_io.h
+# Julia wrapper for header: ../deps/usr/include/fann_io.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: /usr/include/fann_train.h
+# Julia wrapper for header: ../deps/usr/include/fann_train.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: /usr/include/doublefann.h
+# Julia wrapper for header: ../deps/usr/include/compat_time.h
+# Automatically generated using Clang.jl wrap_c, version 0.0.0
+
+# Julia wrapper for header: ../deps/usr/include/doublefann.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
 
@@ -894,6 +969,10 @@ function fann_update_weights_irpropm(ann::Ptr{fann},first_weight::Uint32,past_en
     ccall((:fann_update_weights_irpropm,libfann),Void,(Ptr{fann},Uint32,Uint32),ann,first_weight,past_end)
 end
 
+function fann_update_weights_sarprop(ann::Ptr{fann},epoch::Uint32,first_weight::Uint32,past_end::Uint32)
+    ccall((:fann_update_weights_sarprop,libfann),Void,(Ptr{fann},Uint32,Uint32,Uint32),ann,epoch,first_weight,past_end)
+end
+
 function fann_clear_train_arrays(ann::Ptr{fann})
     ccall((:fann_clear_train_arrays,libfann),Void,(Ptr{fann},),ann)
 end
@@ -928,6 +1007,10 @@ end
 
 function fann_install_candidate(ann::Ptr{fann})
     ccall((:fann_install_candidate,libfann),Void,(Ptr{fann},),ann)
+end
+
+function fann_check_input_output_sizes(ann::Ptr{fann},data::Ptr{fann_train_data})
+    ccall((:fann_check_input_output_sizes,libfann),Cint,(Ptr{fann},Ptr{fann_train_data}),ann,data)
 end
 
 function fann_initialize_candidates(ann::Ptr{fann})
@@ -980,6 +1063,10 @@ end
 
 function fann_read_train_from_file(filename::Ptr{Uint8})
     ccall((:fann_read_train_from_file,libfann),Ptr{fann_train_data},(Ptr{Uint8},),filename)
+end
+
+function fann_create_train(num_data::Uint32,num_input::Uint32,num_output::Uint32)
+    ccall((:fann_create_train,libfann),Ptr{fann_train_data},(Uint32,Uint32,Uint32),num_data,num_input,num_output)
 end
 
 function fann_create_train_from_callback(num_data::Uint32,num_input::Uint32,num_output::Uint32,user_function::Ptr{Void})
@@ -1226,6 +1313,38 @@ function fann_set_rprop_delta_zero(ann::Ptr{fann},rprop_delta_max::Cfloat)
     ccall((:fann_set_rprop_delta_zero,libfann),Void,(Ptr{fann},Cfloat),ann,rprop_delta_max)
 end
 
+function fann_get_sarprop_weight_decay_shift(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_weight_decay_shift,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_weight_decay_shift(ann::Ptr{fann},sarprop_weight_decay_shift::Cfloat)
+    ccall((:fann_set_sarprop_weight_decay_shift,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_weight_decay_shift)
+end
+
+function fann_get_sarprop_step_error_threshold_factor(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_step_error_threshold_factor,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_step_error_threshold_factor(ann::Ptr{fann},sarprop_step_error_threshold_factor::Cfloat)
+    ccall((:fann_set_sarprop_step_error_threshold_factor,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_step_error_threshold_factor)
+end
+
+function fann_get_sarprop_step_error_shift(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_step_error_shift,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_step_error_shift(ann::Ptr{fann},sarprop_step_error_shift::Cfloat)
+    ccall((:fann_set_sarprop_step_error_shift,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_step_error_shift)
+end
+
+function fann_get_sarprop_temperature(ann::Ptr{fann})
+    ccall((:fann_get_sarprop_temperature,libfann),Cfloat,(Ptr{fann},),ann)
+end
+
+function fann_set_sarprop_temperature(ann::Ptr{fann},sarprop_temperature::Cfloat)
+    ccall((:fann_set_sarprop_temperature,libfann),Void,(Ptr{fann},Cfloat),ann,sarprop_temperature)
+end
+
 function fann_cascadetrain_on_data(ann::Ptr{fann},data::Ptr{fann_train_data},max_neurons::Uint32,neurons_between_reports::Uint32,desired_error::Cfloat)
     ccall((:fann_cascadetrain_on_data,libfann),Void,(Ptr{fann},Ptr{fann_train_data},Uint32,Uint32,Cfloat),ann,data,max_neurons,neurons_between_reports,desired_error)
 end
@@ -1290,12 +1409,28 @@ function fann_set_cascade_max_out_epochs(ann::Ptr{fann},cascade_max_out_epochs::
     ccall((:fann_set_cascade_max_out_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_max_out_epochs)
 end
 
+function fann_get_cascade_min_out_epochs(ann::Ptr{fann})
+    ccall((:fann_get_cascade_min_out_epochs,libfann),Uint32,(Ptr{fann},),ann)
+end
+
+function fann_set_cascade_min_out_epochs(ann::Ptr{fann},cascade_min_out_epochs::Uint32)
+    ccall((:fann_set_cascade_min_out_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_min_out_epochs)
+end
+
 function fann_get_cascade_max_cand_epochs(ann::Ptr{fann})
     ccall((:fann_get_cascade_max_cand_epochs,libfann),Uint32,(Ptr{fann},),ann)
 end
 
 function fann_set_cascade_max_cand_epochs(ann::Ptr{fann},cascade_max_cand_epochs::Uint32)
     ccall((:fann_set_cascade_max_cand_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_max_cand_epochs)
+end
+
+function fann_get_cascade_min_cand_epochs(ann::Ptr{fann})
+    ccall((:fann_get_cascade_min_cand_epochs,libfann),Uint32,(Ptr{fann},),ann)
+end
+
+function fann_set_cascade_min_cand_epochs(ann::Ptr{fann},cascade_min_cand_epochs::Uint32)
+    ccall((:fann_set_cascade_min_cand_epochs,libfann),Void,(Ptr{fann},Uint32),ann,cascade_min_cand_epochs)
 end
 
 function fann_get_cascade_num_candidates(ann::Ptr{fann})
@@ -1360,6 +1495,10 @@ end
 
 function fann_destroy(ann::Ptr{fann})
     ccall((:fann_destroy,libfann),Void,(Ptr{fann},),ann)
+end
+
+function fann_copy(ann::Ptr{fann})
+    ccall((:fann_copy,libfann),Ptr{fann},(Ptr{fann},),ann)
 end
 
 function fann_run(ann::Ptr{fann},input::Ptr{fann_type})
@@ -1437,3 +1576,6 @@ end
 function fann_get_user_data(ann::Ptr{fann})
     ccall((:fann_get_user_data,libfann),Ptr{Void},(Ptr{fann},),ann)
 end
+# Julia wrapper for header: ../deps/usr/include/fann_cpp.h
+# Automatically generated using Clang.jl wrap_c, version 0.0.0
+
