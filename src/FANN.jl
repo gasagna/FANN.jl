@@ -1,7 +1,7 @@
 module FANN
 
 # exports
-export MLP
+export MLP, train!, mse
 
 # C FILE pointer
 immutable FILE

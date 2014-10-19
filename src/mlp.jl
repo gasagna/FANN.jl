@@ -15,3 +15,9 @@ function MLP(arch::Vector{Int}, b::Float64=0.1)
 
 	MLP(ann)
 end
+
+function train!(mlp::MLP, X::Vector{Float64}, y::Vector{Float64})
+	fann_train(mlp.ann, pointer(X), pointer(y))
+end
+
+mse(mlp::MLP) = fann_get_MSE(mlp.ann)
