@@ -5,30 +5,10 @@ type MLP
 end
 
 function MLP(arch::Vector{Int}, b::Float64=0.1)
-	# creat object in memory
 	num_layers = uint32(length(arch))
 	layers = pointer(uint32(arch))
 	ann = fann_create_standard_array(num_layers, layers)
-	
-	# initialise weights
 	fann_randomize_weights(ann, -b, b)
-
-	# set activation functions for the hidden and output layers
-	#fann_set_activation_function_hidden(ann, FANN_SIGMOID)
-	#for i = 1:length(arch)-1
-		#println(fann_get_activation_function(ann, 
-											 #convert(Cint, i), 
-											 #convert(Cint, 0)))
-	#end
-	#fann_set_activation_function_output(ann, FANN_LINEAR)
-	#fann_set_activation_steepness_output(ann, 1.0)
-	#for i = 1:length(arch)-1
-		#println(fann_get_activation_function(ann, 
-											 #convert(Cint, i), 
-											 #convert(Cint, 0)))
-	#end
-
-	# return the object
 	MLP(ann)
 end
 

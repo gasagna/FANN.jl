@@ -2,3 +2,5 @@ deps/downloads
 deps/src
 deps/usr
 deps/deps.jl
+src/tmp.jl
+.gitignore
