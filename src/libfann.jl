@@ -158,6 +158,10 @@ function fann_allocate_scale(ann::Ptr{fann})
     ccall((:fann_allocate_scale,libfann),Cint,(Ptr{fann},),ann)
 end
 
+function fann_scale_data_to_range(data::Ptr{Ptr{fann_type}},num_data::Uint32,num_elem::Uint32,old_min::fann_type,old_max::fann_type,new_min::fann_type,new_max::fann_type)
+    ccall((:fann_scale_data_to_range,libfann),Void,(Ptr{Ptr{fann_type}},Uint32,Uint32,fann_type,fann_type,fann_type,fann_type),data,num_data,num_elem,old_min,old_max,new_min,new_max)
+end
+
 function fann_train(ann::Ptr{fann},input::Ptr{fann_type},desired_output::Ptr{fann_type})
     ccall((:fann_train,libfann),Void,(Ptr{fann},Ptr{fann_type},Ptr{fann_type}),ann,input,desired_output)
 end
@@ -202,12 +206,28 @@ function fann_create_train(num_data::Uint32,num_input::Uint32,num_output::Uint32
     ccall((:fann_create_train,libfann),Ptr{fann_train_data},(Uint32,Uint32,Uint32),num_data,num_input,num_output)
 end
 
+function fann_create_train_pointer_array(num_data::Uint32,num_input::Uint32,input::Ptr{Ptr{fann_type}},num_output::Uint32,output::Ptr{Ptr{fann_type}})
+    ccall((:fann_create_train_pointer_array,libfann),Ptr{fann_train_data},(Uint32,Uint32,Ptr{Ptr{fann_type}},Uint32,Ptr{Ptr{fann_type}}),num_data,num_input,input,num_output,output)
+end
+
+function fann_create_train_array(num_data::Uint32,num_input::Uint32,input::Ptr{fann_type},num_output::Uint32,output::Ptr{fann_type})
+    ccall((:fann_create_train_array,libfann),Ptr{fann_train_data},(Uint32,Uint32,Ptr{fann_type},Uint32,Ptr{fann_type}),num_data,num_input,input,num_output,output)
+end
+
 function fann_create_train_from_callback(num_data::Uint32,num_input::Uint32,num_output::Uint32,user_function::Ptr{Void})
     ccall((:fann_create_train_from_callback,libfann),Ptr{fann_train_data},(Uint32,Uint32,Uint32,Ptr{Void}),num_data,num_input,num_output,user_function)
 end
 
 function fann_destroy_train(train_data::Ptr{fann_train_data})
     ccall((:fann_destroy_train,libfann),Void,(Ptr{fann_train_data},),train_data)
+end
+
+function fann_get_train_input(data::Ptr{fann_train_data},position::Uint32)
+    ccall((:fann_get_train_input,libfann),Ptr{fann_type},(Ptr{fann_train_data},Uint32),data,position)
+end
+
+function fann_get_train_output(data::Ptr{fann_train_data},position::Uint32)
+    ccall((:fann_get_train_output,libfann),Ptr{fann_type},(Ptr{fann_train_data},Uint32),data,position)
 end
 
 function fann_shuffle_train_data(train_data::Ptr{fann_train_data})
@@ -862,9 +882,6 @@ end
 # Julia wrapper for header: ../deps/usr/include/fann_train.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# Julia wrapper for header: ../deps/usr/include/compat_time.h
-# Automatically generated using Clang.jl wrap_c, version 0.0.0
-
 # Julia wrapper for header: ../deps/usr/include/doublefann.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
@@ -1025,6 +1042,10 @@ function fann_allocate_scale(ann::Ptr{fann})
     ccall((:fann_allocate_scale,libfann),Cint,(Ptr{fann},),ann)
 end
 
+function fann_scale_data_to_range(data::Ptr{Ptr{fann_type}},num_data::Uint32,num_elem::Uint32,old_min::fann_type,old_max::fann_type,new_min::fann_type,new_max::fann_type)
+    ccall((:fann_scale_data_to_range,libfann),Void,(Ptr{Ptr{fann_type}},Uint32,Uint32,fann_type,fann_type,fann_type,fann_type),data,num_data,num_elem,old_min,old_max,new_min,new_max)
+end
+
 function fann_train(ann::Ptr{fann},input::Ptr{fann_type},desired_output::Ptr{fann_type})
     ccall((:fann_train,libfann),Void,(Ptr{fann},Ptr{fann_type},Ptr{fann_type}),ann,input,desired_output)
 end
@@ -1069,12 +1090,28 @@ function fann_create_train(num_data::Uint32,num_input::Uint32,num_output::Uint32
     ccall((:fann_create_train,libfann),Ptr{fann_train_data},(Uint32,Uint32,Uint32),num_data,num_input,num_output)
 end
 
+function fann_create_train_pointer_array(num_data::Uint32,num_input::Uint32,input::Ptr{Ptr{fann_type}},num_output::Uint32,output::Ptr{Ptr{fann_type}})
+    ccall((:fann_create_train_pointer_array,libfann),Ptr{fann_train_data},(Uint32,Uint32,Ptr{Ptr{fann_type}},Uint32,Ptr{Ptr{fann_type}}),num_data,num_input,input,num_output,output)
+end
+
+function fann_create_train_array(num_data::Uint32,num_input::Uint32,input::Ptr{fann_type},num_output::Uint32,output::Ptr{fann_type})
+    ccall((:fann_create_train_array,libfann),Ptr{fann_train_data},(Uint32,Uint32,Ptr{fann_type},Uint32,Ptr{fann_type}),num_data,num_input,input,num_output,output)
+end
+
 function fann_create_train_from_callback(num_data::Uint32,num_input::Uint32,num_output::Uint32,user_function::Ptr{Void})
     ccall((:fann_create_train_from_callback,libfann),Ptr{fann_train_data},(Uint32,Uint32,Uint32,Ptr{Void}),num_data,num_input,num_output,user_function)
 end
 
 function fann_destroy_train(train_data::Ptr{fann_train_data})
     ccall((:fann_destroy_train,libfann),Void,(Ptr{fann_train_data},),train_data)
+end
+
+function fann_get_train_input(data::Ptr{fann_train_data},position::Uint32)
+    ccall((:fann_get_train_input,libfann),Ptr{fann_type},(Ptr{fann_train_data},Uint32),data,position)
+end
+
+function fann_get_train_output(data::Ptr{fann_train_data},position::Uint32)
+    ccall((:fann_get_train_output,libfann),Ptr{fann_type},(Ptr{fann_train_data},Uint32),data,position)
 end
 
 function fann_shuffle_train_data(train_data::Ptr{fann_train_data})

@@ -26,19 +26,19 @@ const FANN_ERRSTR_MAX = 128
 # Skipping MacroDefinition: fann_cos_real ( sum ) ( cos ( sum ) / 2.0f + 0.5f )
 # Skipping MacroDefinition: fann_cos_derive ( steepness , sum ) ( steepness * - sin ( steepness * sum ) / 2.0f )
 # Skipping MacroDefinition: fann_activation_switch ( activation_function , value , result ) switch ( activation_function ) \
-# { case FANN_LINEAR : result = ( fann_type ) value ; break ; case FANN_LINEAR_PIECE : result = ( fann_type ) ( ( value < 0 ) ? 0 : ( value > 1 ) ? 1 : value ) ; break ; case FANN_LINEAR_PIECE_SYMMETRIC : result = ( fann_type ) ( ( value < - 1 ) ? - 1 : ( value > 1 ) ? 1 : value ) ; break ; case FANN_SIGMOID : result = ( fann_type ) fann_sigmoid_real ( value ) ; break ; case FANN_SIGMOID_SYMMETRIC : result = ( fann_type ) fann_sigmoid_symmetric_real ( value ) ; break ; case FANN_SIGMOID_SYMMETRIC_STEPWISE : result = ( fann_type ) fann_stepwise ( - 2.64665293693542480469e+00 , - 1.47221934795379638672e+00 , - 5.49306154251098632812e-01 , 5.49306154251098632812e-01 , 1.47221934795379638672e+00 , 2.64665293693542480469e+00 , - 9.90000009536743164062e-01 , - 8.99999976158142089844e-01 , - 5.00000000000000000000e-01 , 5.00000000000000000000e-01 , 8.99999976158142089844e-01 , 9.90000009536743164062e-01 , - 1 , 1 , value ) ; break ; case FANN_SIGMOID_STEPWISE : result = ( fann_type ) fann_stepwise ( - 2.64665246009826660156e+00 , - 1.47221946716308593750e+00 , - 5.49306154251098632812e-01 , 5.49306154251098632812e-01 , 1.47221934795379638672e+00 , 2.64665293693542480469e+00 , 4.99999988824129104614e-03 , 5.00000007450580596924e-02 , 2.50000000000000000000e-01 , 7.50000000000000000000e-01 , 9.49999988079071044922e-01 , 9.95000004768371582031e-01 , 0 , 1 , value ) ; break ; case FANN_THRESHOLD : result = ( fann_type ) ( ( value < 0 ) ? 0 : 1 ) ; break ; case FANN_THRESHOLD_SYMMETRIC : result = ( fann_type ) ( ( value < 0 ) ? - 1 : 1 ) ; break ; case FANN_GAUSSIAN : result = ( fann_type ) fann_gaussian_real ( value ) ; break ; case FANN_GAUSSIAN_SYMMETRIC : result = ( fann_type ) fann_gaussian_symmetric_real ( value ) ; break ; case FANN_ELLIOT : result = ( fann_type ) fann_elliot_real ( value ) ; break ; case FANN_ELLIOT_SYMMETRIC : result = ( fann_type ) fann_elliot_symmetric_real ( value ) ; break ; case FANN_SIN_SYMMETRIC : result = ( fann_type ) fann_sin_symmetric_real ( value ) ; break ; case FANN_COS_SYMMETRIC : result = ( fann_type ) fann_cos_symmetric_real ( value ) ; break ; case FANN_SIN : result = ( fann_type ) fann_sin_real ( value ) ; break ; case FANN_COS : result = ( fann_type ) fann_cos_real ( value ) ; break ; case FANN_GAUSSIAN_STEPWISE : result = 0 ; break ; \
-#}
+{ case FANN_LINEAR : result = ( fann_type ) value ; break ; case FANN_LINEAR_PIECE : result = ( fann_type ) ( ( value < 0 ) ? 0 : ( value > 1 ) ? 1 : value ) ; break ; case FANN_LINEAR_PIECE_SYMMETRIC : result = ( fann_type ) ( ( value < - 1 ) ? - 1 : ( value > 1 ) ? 1 : value ) ; break ; case FANN_SIGMOID : result = ( fann_type ) fann_sigmoid_real ( value ) ; break ; case FANN_SIGMOID_SYMMETRIC : result = ( fann_type ) fann_sigmoid_symmetric_real ( value ) ; break ; case FANN_SIGMOID_SYMMETRIC_STEPWISE : result = ( fann_type ) fann_stepwise ( - 2.64665293693542480469e+00 , - 1.47221934795379638672e+00 , - 5.49306154251098632812e-01 , 5.49306154251098632812e-01 , 1.47221934795379638672e+00 , 2.64665293693542480469e+00 , - 9.90000009536743164062e-01 , - 8.99999976158142089844e-01 , - 5.00000000000000000000e-01 , 5.00000000000000000000e-01 , 8.99999976158142089844e-01 , 9.90000009536743164062e-01 , - 1 , 1 , value ) ; break ; case FANN_SIGMOID_STEPWISE : result = ( fann_type ) fann_stepwise ( - 2.64665246009826660156e+00 , - 1.47221946716308593750e+00 , - 5.49306154251098632812e-01 , 5.49306154251098632812e-01 , 1.47221934795379638672e+00 , 2.64665293693542480469e+00 , 4.99999988824129104614e-03 , 5.00000007450580596924e-02 , 2.50000000000000000000e-01 , 7.50000000000000000000e-01 , 9.49999988079071044922e-01 , 9.95000004768371582031e-01 , 0 , 1 , value ) ; break ; case FANN_THRESHOLD : result = ( fann_type ) ( ( value < 0 ) ? 0 : 1 ) ; break ; case FANN_THRESHOLD_SYMMETRIC : result = ( fann_type ) ( ( value < 0 ) ? - 1 : 1 ) ; break ; case FANN_GAUSSIAN : result = ( fann_type ) fann_gaussian_real ( value ) ; break ; case FANN_GAUSSIAN_SYMMETRIC : result = ( fann_type ) fann_gaussian_symmetric_real ( value ) ; break ; case FANN_ELLIOT : result = ( fann_type ) fann_elliot_real ( value ) ; break ; case FANN_ELLIOT_SYMMETRIC : result = ( fann_type ) fann_elliot_symmetric_real ( value ) ; break ; case FANN_SIN_SYMMETRIC : result = ( fann_type ) fann_sin_symmetric_real ( value ) ; break ; case FANN_COS_SYMMETRIC : result = ( fann_type ) fann_cos_symmetric_real ( value ) ; break ; case FANN_SIN : result = ( fann_type ) fann_sin_real ( value ) ; break ; case FANN_COS : result = ( fann_type ) fann_cos_real ( value ) ; break ; case FANN_GAUSSIAN_STEPWISE : result = 0 ; break ; \
+}
 
 const FANN_FIX_VERSION = "FANN_FIX_2.0"
 const FANN_FLO_VERSION = "FANN_FLO_2.1"
 const FANN_CONF_VERSION = FANN_FLO_VERSION
 
 # Skipping MacroDefinition: FANN_GET ( type , name ) FANN_EXTERNAL type FANN_API fann_get_ ## name ( struct fann * ann ) \
-# { return ann -> name ; \
-# }
+{ return ann -> name ; \
+}
 # Skipping MacroDefinition: FANN_SET ( type , name ) FANN_EXTERNAL void FANN_API fann_set_ ## name ( struct fann * ann , type value ) \
-# { ann -> name = value ; \
-# }
+{ ann -> name = value ; \
+}
 # Skipping MacroDefinition: FANN_GET_SET ( type , name ) FANN_GET ( type , name ) FANN_SET ( type , name )
 # Skipping MacroDefinition: fann_max ( x , y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
 # Skipping MacroDefinition: fann_min ( x , y ) ( ( ( x ) < ( y ) ) ? ( x ) : ( y ) )
@@ -75,6 +75,7 @@ const FANN_E_INDEX_OUT_OF_BOUND = (uint32)(17)
 const FANN_E_SCALE_NOT_PRESENT = (uint32)(18)
 const FANN_E_INPUT_NO_MATCH = (uint32)(19)
 const FANN_E_OUTPUT_NO_MATCH = (uint32)(20)
+const FANN_E_WRONG_PARAMETERS_FOR_CREATE = (uint32)(21)
 # end enum fann_errno_enum
 
 type fann_error

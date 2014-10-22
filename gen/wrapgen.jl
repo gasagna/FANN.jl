@@ -7,8 +7,7 @@ context = wrap_c.init(output_file="../src/libfann.jl",
 
 context.options.wrap_structs = true
 
-wrap_c.wrap_c_headers(context, ["../deps/usr/include/compat_time.h",
-								"../deps/usr/include/doublefann.h",
+wrap_c.wrap_c_headers(context, ["../deps/usr/include/doublefann.h",
 								"../deps/usr/include/fann.h",
 								"../deps/usr/include/fann_activation.h",
 								"../deps/usr/include/fann_cascade.h",
@@ -18,4 +17,3 @@ wrap_c.wrap_c_headers(context, ["../deps/usr/include/compat_time.h",
 								"../deps/usr/include/fann_internal.h",
 								"../deps/usr/include/fann_io.h",
 								"../deps/usr/include/fann_train.h"])
-
