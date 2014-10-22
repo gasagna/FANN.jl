@@ -21,6 +21,10 @@ type ANN
 		if ann == C_NULL
             error("Error in fann_create_standard_array")
         end
+		ccall((:fann_set_activation_function_output, libfann),
+			  Void,
+			  (Ptr{fann}, fann_activationfunc_enum),
+			  ann, FANN_LINEAR)	
 		ANN(ann, layers[1], layers[end])
 	end
 end
