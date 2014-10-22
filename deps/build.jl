@@ -3,7 +3,7 @@ using BinDeps
 # Heavily taken from Sundials.jl build.jl file.
 @BinDeps.setup
 
-fannlib = library_dependency("libfann")
+fannlib = library_dependency("libdoublefann")
 uri = "https://github.com/libfann/fann/archive/master.zip"
 
 provides(Sources, URI(uri), fannlib, unpacked_dir="fann-master")
@@ -21,4 +21,4 @@ provides(SimpleBuild,
         end
     end), fannlib)
 
-@BinDeps.install [:libfann => :libfann]
+@BinDeps.install [:libdoublefann => :libfann]
