@@ -6,22 +6,22 @@ X = [ 1.0 3.0 5.0 7.0;
 	  2.0 4.0 6.0 8.0]
 
 # desired ouputs	
-y = [0.0, 1.0, 1.0, 0.0]
+Y = [0.0 1.0 1.0 0.0]
 
 # definitions
 M = size(X, 2)
 nin = size(X, 1)
-nout = 1
+nout = size(Y, 1)
 
 # create dataset
-dset = DataSet(X, y)
+dset = DataSet(X, Y)
 
 # 1) try to load input data from the struct
 inputs = pointer_to_array(unsafe_load(dset.data).input, M)
 outputs = pointer_to_array(unsafe_load(dset.data).output, M)
 for i = 1:M
 	@test vec(X[:, i]) == pointer_to_array(inputs[i], nin)
-	@test [y[i]] == pointer_to_array(outputs[i], nout)
+	@test vec(Y[:, i]) == pointer_to_array(outputs[i], nout)
 end
 
 # 2)  try to save it and the read file
@@ -41,6 +41,6 @@ for i = 1:M
 	@test norm(actual - expected) < 1e-5
 
 	actual = Float64[data[2*i + 1, 1:nout]...] # very ugly
-	expected = y[i]
+	expected = Y[:, i]
 	@test norm(actual - expected) < 1e-5
 end
