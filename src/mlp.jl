@@ -15,11 +15,8 @@ end
 show(mlp) = fann_print_parameters(mlp.ann)
 
 #  ~~~~~~ Training ~~~~~~~~~
-function train!{T}(mlp::MLP, X::Matrix{T}, y::Vector{T}; max_epochs::Int=100, 
+function train!(mlp::MLP, dset::DataSet; max_epochs::Int=100, 
 				desired_error::Float64=1e-5, epochs_between_reports::Int=10)
-
-	# create dataset
-	dset = DataSet(X, y)
 
 	# Train network on dataset
 	fann_train_on_data(mlp.ann, 
@@ -29,9 +26,6 @@ function train!{T}(mlp::MLP, X::Matrix{T}, y::Vector{T}; max_epochs::Int=100,
 					   convert(Cfloat, desired_error))
 end
 
-function train!(mlp::MLP, X::Vector{Float64}, y::Vector{Float64})
-	fann_train(mlp.ann, pointer(X), pointer(y))
-end
 
 function test(mlp::MLP, X::Vector{Float64}, y::Vector{Float64})
 	#fann_reset_MSE(mlp.ann)

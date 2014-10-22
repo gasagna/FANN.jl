@@ -1,4 +1,5 @@
 using FANN
+
 # took some inspiration from Julia NLopt package
 typealias _DataSet Ptr{FANN.fann_train_data}
 
@@ -13,7 +14,6 @@ typealias _DataSet Ptr{FANN.fann_train_data}
 # ----------
 # X : n_feat x n_obs matrix
 # y : n_obs vector
-#
 type DataSet
     data::_DataSet
     function DataSet(d::_DataSet)
@@ -27,17 +27,16 @@ type DataSet
    		end
 		num_input, num_data = size(X)
 		num_output = 1  
-   		d = ccall((:fann_create_train, libfann), _DataSet, 
-   			      (Uint32, Uint32, Uint32), 
-   			      num_data, num_input, num_output)
+		d = ccall((:fann_create_train_array, libfann), _DataSet,
+				  (Uint32, Uint32, Ptr{Cdouble}, Uint32, Ptr{Cdouble}),
+				  num_data,
+				  num_input,
+				  convert(Ptr{Cdouble}, pointer(X)),
+				  num_output,
+				  convert(Ptr{Cdouble}, pointer(y)))
         if d == C_NULL
             error("Error in fann_create_train")
         end
-        # ==== BEGIN TRICKY BIT =======
-		tmp = unsafe_load(d)
-		tmp.input = pointer([pointer(X, i) for i = 1:num_input:length(X)])
-		tmp.output = pointer([pointer(y, i) for i = 1:length(y)])
-		# ==== END TRICKY BIT =======
         DataSet(d)
     end
 end
@@ -45,3 +44,12 @@ end
 Base.convert(::Type{_DataSet}, d::DataSet) = d.data 
 Base.show(io::IO, d::DataSet) = print(io, "DataSet()")
 destroy(d::DataSet) = ccall((:fann_destroy_train, libfann), Void, (_DataSet,), d)
+
+function save(dset::DataSet, filename) 
+	retval = ccall((:fann_save_train, libfann),
+			       Cint,
+			       (Ptr{fann_train_data}, Ptr{Uint8}),
+			       dset, filename)
+	retval != 0 && error("Error saving data")
+end
+
