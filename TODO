@@ -1,0 +1,12 @@
+TODO
+----
+
+# add training algorithm
+# add choice for activation functions
+# add initialisation of weight from interval
+# add save and load network to file
+# add show for DataSet and ANN
+# add training and validation sets
+# write README with api
+
+# understand why linear problem stops earlier and desired error is not reached
