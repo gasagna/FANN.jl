@@ -21,7 +21,7 @@ include("data.jl")
 include("mlp.jl")
 
 # exports
-export MLP, DataSet
-export train!, predict, mse, show
+export DataSet, save
+export ANN, train!
 
 end

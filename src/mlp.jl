@@ -1,50 +1,61 @@
 using FANN
 
-type MLP
-	ann::Ptr{FANN.fann}
+typealias _ANN Ptr{FANN.fann}
+
+type ANN
+	ann::_ANN
+	function ANN(ann::_ANN)
+		ann = new(ann)
+		finalizer(ann, destroy)
+		ann
+	end
+	function ANN(layers::Vector{Int}, b::Float64=0.1)
+		# allocate object
+		ann = ccall((:fann_create_standard_array, libfann), 
+			        Ptr{fann},
+			        (Uint32, Ptr{Uint32}),
+			        length(layers), 
+			        pointer(uint32(layers)))
+		if ann == C_NULL
+            error("Error in fann_create_standard_array")
+        end
+		ANN(ann)
+	end
 end
 
-function MLP(arch::Vector{Int}, b::Float64=0.1)
-	num_layers = uint32(length(arch))
-	layers = pointer(uint32(arch))
-	ann = fann_create_standard_array(num_layers, layers)
-	fann_randomize_weights(ann, -b, b)
-	MLP(ann)
-end
+Base.convert(::Type{_ANN}, ann::ANN) = ann.ann
+destroy(ann::ANN) = ccall((:fann_destroy, libfann), Void, (_ANN,), ann)
+show(ann) = fann_print_parameters(ann.ann)
 
-show(mlp) = fann_print_parameters(mlp.ann)
 
 #  ~~~~~~ Training ~~~~~~~~~
-function train!(mlp::MLP, dset::DataSet; max_epochs::Int=100, 
-				desired_error::Float64=1e-5, epochs_between_reports::Int=10)
-
-	# Train network on dataset
-	fann_train_on_data(mlp.ann, 
-					   dset.data, 
-					   uint32(max_epochs), 
-					   uint32(epochs_between_reports), 
-					   convert(Cfloat, desired_error))
+function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
+	# first check
+	checksizes(ann, dset)
+	ccall((:fann_train_on_data, libfann),
+		  Void,
+		  (Ptr{fann}, Ptr{fann_train_data}, Uint32, Uint32,  Cfloat),
+		  ann.ann, dset, max_epochs, epochs_between_reports, desired_error)
 end
 
-
-function test(mlp::MLP, X::Vector{Float64}, y::Vector{Float64})
-	#fann_reset_MSE(mlp.ann)
-	fann_test(mlp.ann, pointer(X), pointer(y))
-	fann_get_MSE(mlp.ann)
+function checksizes(ann::ANN, dset::DataSet)
+	# Check that sizes of DataSet and ANN match
+	ret = ccall((:fann_check_input_output_sizes, libfann), 
+		        Cint,
+		        (Ptr{fann}, Ptr{fann_train_data}),
+		        ann, dset)
+	ret == 0 || error("wrong DataSet or ANN sizes")
 end
 
 #  ~~~~~~ Prediction ~~~~~~~~~
-function predict{T}(mlp::MLP, X::Matrix{T})
+function predict{T}(ann::ANN, X::Matrix{T})
 	# output vector
 	n_feat, n_obs = size(X)
 	out = zeros(T, n_obs)
 	for i = 1:n_obs
 		input = pointer(X, (i-1)*n_feat + 1)
-		out_ptr = fann_run(mlp.ann, input)
+		out_ptr = fann_run(ann.ann, input)
 		out[i] = unsafe_load(out_ptr, 1)
 	end
 	return out
 end
-
-
-mse(mlp::MLP) = fann_get_MSE(mlp.ann)
