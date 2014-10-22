@@ -4,13 +4,12 @@ using BinDeps
 @BinDeps.setup
 
 fannlib = library_dependency("libfann")
-version = "FANN-2.2.0-Source"
-uri = "http://sourceforge.net/projects/fann/files/fann/2.2.0/$version.tar.gz"
+uri = "https://github.com/libfann/fann/archive/master.zip"
 
-provides(Sources, URI(uri), fannlib, MD5="c9d6c8da5bb70276352a1718a668562c")
+provides(Sources, URI(uri), fannlib, unpacked_dir="fann-master")
 
 prefix = joinpath(BinDeps.depsdir(fannlib),"usr")
-srcdir = joinpath(BinDeps.depsdir(fannlib),"src", version) 
+srcdir = joinpath(BinDeps.depsdir(fannlib),"src", "fann-master") 
 
 provides(SimpleBuild,
     (@build_steps begin
