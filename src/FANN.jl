@@ -18,10 +18,10 @@ include("libfann.jl")
 
 # load files
 include("data.jl")
-include("mlp.jl")
+include("ann.jl")
 
 # exports
 export DataSet, save
-export ANN, train!
+export ANN, train!, predict
 
 end

@@ -4,8 +4,10 @@ typealias _ANN Ptr{FANN.fann}
 
 type ANN
 	ann::_ANN
-	function ANN(ann::_ANN)
-		ann = new(ann)
+	nin::Int
+	nout::Int
+	function ANN(ann::_ANN, nin::Int, nout::Int)
+		ann = new(ann, nin, nout)
 		finalizer(ann, destroy)
 		ann
 	end
@@ -19,7 +21,7 @@ type ANN
 		if ann == C_NULL
             error("Error in fann_create_standard_array")
         end
-		ANN(ann)
+		ANN(ann, layers[1], layers[end])
 	end
 end
 
@@ -49,13 +51,15 @@ end
 
 #  ~~~~~~ Prediction ~~~~~~~~~
 function predict{T}(ann::ANN, X::Matrix{T})
+	nin, nobs = size(X)
 	# output vector
-	n_feat, n_obs = size(X)
-	out = zeros(T, n_obs)
-	for i = 1:n_obs
-		input = pointer(X, (i-1)*n_feat + 1)
-		out_ptr = fann_run(ann.ann, input)
-		out[i] = unsafe_load(out_ptr, 1)
+	out = zeros(T, ann.nout, nobs)
+	for i = 1:nobs
+		out_ptr = ccall((:fann_run, libfann), 
+						Ptr{fann_type},
+						(Ptr{fann}, Ptr{fann_type}),
+						ann, pointer(X, (i-1)*nin + 1))
+		out[:, i] = pointer_to_array(out_ptr, ann.nout)
 	end
 	return out
 end
