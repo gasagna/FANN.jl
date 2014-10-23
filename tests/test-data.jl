@@ -27,6 +27,7 @@ end
 # 2)  try to save it and the read file
 save(dset, "here")
 data = readdlm("here")
+rm("here")
 
 # first row is header data
 header = data[1, :]

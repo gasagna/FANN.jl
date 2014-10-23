@@ -6,7 +6,10 @@ type ANN
 	ann::_ANN
 	nin::Int
 	nout::Int
-	function ANN(ann::_ANN, nin::Int, nout::Int)
+	function ANN(ann::_ANN)
+		# additional constructor for when we load a net from file
+		nin = ccall((:fann_get_num_input, libfann), Uint32, (Ptr{fann},),ann)
+		nout = ccall((:fann_get_num_output, libfann), Uint32, (Ptr{fann},),ann)
 		ann = new(ann, nin, nout)
 		finalizer(ann, destroy)
 		ann
@@ -44,7 +47,7 @@ type ANN
        		  Void,
        		  (Ptr{fann}, fann_type, fann_type),
        		  ann, -b, b)
-		ANN(ann, layers[1], layers[end])
+		ANN(ann)
 	end
 end
 
@@ -52,6 +55,17 @@ Base.convert(::Type{_ANN}, ann::ANN) = ann.ann
 destroy(ann::ANN) = ccall((:fann_destroy, libfann), Void, (_ANN,), ann)
 Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},), ann)
 
+
+# ~~~~~~ IO functions ~~~~~~~~
+save(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann),
+	                                     Cint,
+	                                     (Ptr{fann}, Ptr{Uint8}),
+	                                     ann, file)
+
+load(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann),
+								    Ptr{fann}, 
+								    (Ptr{Uint8},),
+								    file))
 
 #  ~~~~~~ Training ~~~~~~~~~
 function train!(ann::ANN, dset::DataSet; 
