@@ -14,12 +14,11 @@ end
 
 # load library wrapper
 include("libfann_common.jl")
-include("libfann.jl")
 
 # load files
+include("constants.jl")
 include("data.jl")
 include("ann.jl")
-include("activation.jl")
 
 # exports
 export DataSet, save

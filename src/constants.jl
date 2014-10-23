@@ -1,3 +1,16 @@
+# Return algorithm number given a symbol
+const alg_dict = [:incremental => (uint32)(0),
+	   		      :batch       => (uint32)(1),
+				  :rprop       => (uint32)(2),
+				  :quickprop   => (uint32)(3),
+				  :sarprop     => (uint32)(4)]
+
+function alg2uint(algorithm::Symbol)
+	haskey(alg_dict, algorithm) || error("algorithm $algorithm not available")
+	return alg_dict[algorithm]
+end
+
+# Return activation number given a symbol
 const activation_dict = [:linear                     => (uint32)(0),
  						 :threshold                  => (uint32)(1),
  						 :threshold_symmetric        => (uint32)(2),
@@ -17,9 +30,8 @@ const activation_dict = [:linear                     => (uint32)(0),
  						 :sin                        => (uint32)(16),
  						 :cos                        => (uint32)(17)]
 
-# Return activation number given a symbol
 function act2uint(activation::Symbol)
-	haskey(activation_dict, activation) || error("activation function not found")
+	haskey(activation_dict, activation) || error("activation function $activation not available")
 	return activation_dict[activation]
 end
 	

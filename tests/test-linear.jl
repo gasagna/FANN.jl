@@ -2,7 +2,7 @@ using FANN
 using Base.Test
 
 # test simple linear problem for which we know the solution
-net = ANN([2, 1], 0.2)
+net = ANN([2, 1], [:linear], b=0.1)
 
 X = [ 0.0 1.0 0.0 ;
 	  0.0 0.0 1.0 ]

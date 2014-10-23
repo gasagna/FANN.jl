@@ -1,7 +1,6 @@
 TODO
 ----
 
-# add choice for activation functions
 # add training algorithm
 # add initialisation of weight from interval
 # add save and load network to file

@@ -36,7 +36,7 @@ type ANN
         for layer = 1:length(layers)-1
             ccall((:fann_set_activation_function_layer, libfann), 
             	  Void,
-            	  (Ptr{fann}, Uint32, Cint), 
+            	  (Ptr{fann}, fann_activationfunc_enum, Cint), 
             	  ann, act2uint(activation[layer]), layer)
         end
         # randomize weights
@@ -54,7 +54,8 @@ Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},
 
 
 #  ~~~~~~ Training ~~~~~~~~~
-function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
+function train!(ann::ANN, dset::DataSet; 
+				max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
 	# first check
 	checksizes(ann, dset)
 	ccall((:fann_train_on_data, libfann),

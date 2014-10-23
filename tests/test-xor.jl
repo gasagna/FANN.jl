@@ -18,6 +18,6 @@ dset = DataSet(X, y)
 train!(net, dset, 
 	   max_epochs=100000, 
 	   epochs_between_reports=10000, 
-	   desired_error=1e-10)
+	   desired_error=1e-5)
 
 #predict(net, X) |> println
