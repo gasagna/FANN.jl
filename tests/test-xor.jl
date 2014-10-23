@@ -1,7 +1,8 @@
 using FANN
 using Base.Test
 
-net = ANN([2, 2, 1], 0.2)
+net = ANN([2, 2, 1], [:sigmoid, :linear])
+show(net)
 
 # xor data, in a n_features x n_observation matrix 
 X = [ 1.0 1.0 0.0 0.0 ;

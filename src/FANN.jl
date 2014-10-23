@@ -19,6 +19,7 @@ include("libfann.jl")
 # load files
 include("data.jl")
 include("ann.jl")
+include("activation.jl")
 
 # exports
 export DataSet, save

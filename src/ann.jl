@@ -11,7 +11,18 @@ type ANN
 		finalizer(ann, destroy)
 		ann
 	end
-	function ANN(layers::Vector{Int}, b::Float64=0.1)
+	function ANN(layers::Vector{Int}, activation::Vector{Symbol}; b::Float64=0.1)
+		# Artificial Neural Network 
+		# 
+		# Parameters
+		# ----------
+		# layers : number of nodes for each layer
+		# activation : array of symbols with activation function for each layer excluded the input
+		# b : [-b, b] defines the range for random initialisation of the weights
+		# 
+		#
+		# activation function for hidden and output layers
+		length(activation) == length(layers) - 1 || error("wrong dimension of activation function vector ")
 		# allocate object
 		ann = ccall((:fann_create_standard_array, libfann), 
 			        Ptr{fann},
@@ -21,17 +32,25 @@ type ANN
 		if ann == C_NULL
             error("Error in fann_create_standard_array")
         end
-		ccall((:fann_set_activation_function_output, libfann),
-			  Void,
-			  (Ptr{fann}, fann_activationfunc_enum),
-			  ann, FANN_LINEAR)	
+        # set activation function for each layer
+        for layer = 1:length(layers)-1
+            ccall((:fann_set_activation_function_layer, libfann), 
+            	  Void,
+            	  (Ptr{fann}, Uint32, Cint), 
+            	  ann, act2uint(activation[layer]), layer)
+        end
+        # randomize weights
+       	ccall((:fann_randomize_weights, libfann),
+       		  Void,
+       		  (Ptr{fann}, fann_type, fann_type),
+       		  ann, -b, b)
 		ANN(ann, layers[1], layers[end])
 	end
 end
 
 Base.convert(::Type{_ANN}, ann::ANN) = ann.ann
 destroy(ann::ANN) = ccall((:fann_destroy, libfann), Void, (_ANN,), ann)
-show(ann) = fann_print_parameters(ann.ann)
+Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},), ann)
 
 
 #  ~~~~~~ Training ~~~~~~~~~
