@@ -46,7 +46,7 @@ Base.show(io::IO, d::DataSet) = print(io, "DataSet()")
 destroy(d::DataSet) = ccall((:fann_destroy_train, libfann), Void, (_DataSet,), d)
 
 # Save a dataset to file. Used for debugging.
-function save(dset::DataSet, filename) 
+function save(dset::DataSet, filename::ASCIIString) 
 	retval = ccall((:fann_save_train, libfann),
 			       Cint,
 			       (Ptr{fann_train_data}, Ptr{Uint8}),
@@ -54,3 +54,8 @@ function save(dset::DataSet, filename)
 	retval != 0 && error("Error saving data")
 end
 
+function load(file::ASCIIString)
+    dset = ccall((:fann_read_train_from_file, libfann), Ptr{fann_train_data}, (Ptr{Uint8},), filename)
+    dset == C_NULL && error("Error reading dataset")
+    return DataSet(dset)
+end
