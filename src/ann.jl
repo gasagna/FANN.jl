@@ -22,8 +22,7 @@ type ANN
 		# layers : number of nodes for each layer
 		# activation : array of symbols with activation function for each layer excluded the input
 		# b : [-b, b] defines the range for random initialisation of the weights
-		# 
-		#
+
 		# activation function for hidden and output layers
 		length(activation) == length(layers) - 1 || error("wrong dimension of activation function vector ")
 		# allocate object
@@ -55,22 +54,14 @@ Base.convert(::Type{_ANN}, ann::ANN) = ann.ann
 destroy(ann::ANN) = ccall((:fann_destroy, libfann), Void, (_ANN,), ann)
 Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},), ann)
 
-
 # ~~~~~~ IO functions ~~~~~~~~
-save(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann),
-	                                     Cint,
-	                                     (Ptr{fann}, Ptr{Uint8}),
-	                                     ann, file)
+save(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann), Cint, (Ptr{fann}, Ptr{Uint8}), ann, file)
+load(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fann},  (Ptr{Uint8},), file))
 
-load(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann),
-								    Ptr{fann}, 
-								    (Ptr{Uint8},),
-								    file))
 
-#  ~~~~~~ Training ~~~~~~~~~
-# General function
-function train!(ann::ANN, dset::DataSet; 
-				max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
+# ~~~~~~ Training funcs ~~~~~~
+# Standard training function
+function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
 	# first check
 	checksizes(ann, dset)
 	ccall((:fann_train_on_data, libfann),
@@ -80,11 +71,7 @@ function train!(ann::ANN, dset::DataSet;
 end
 
 # Early-stop training with validation test
-function train!(ann::ANN, tset::DataSet, vset::DataSet; 
-			    max_epochs::Int=100, 
-				desired_error::Float64=1e-5, 
-				epochs_between_reports::Int=10, 
-				minratio::Float64=0.95)
+function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10, minratio::Float64=0.95)
 	# run ann on validation set to have first value 
 	vmse_last = 0.0f0
 	vmse_curr = mse(ann, vset)
@@ -122,9 +109,8 @@ end
 # Compute mean square error on dataset
 mse(ann::ANN, dset::DataSet) = ccall((:fann_test_data, libfann), Cfloat, (Ptr{fann}, Ptr{fann_train_data}), ann, dset)
 
-
+# Check that sizes of DataSet and ANN match
 function checksizes(ann::ANN, dset::DataSet)
-	# Check that sizes of DataSet and ANN match
 	ret = ccall((:fann_check_input_output_sizes, libfann), 
 		        Cint,
 		        (Ptr{fann}, Ptr{fann_train_data}),
@@ -132,10 +118,11 @@ function checksizes(ann::ANN, dset::DataSet)
 	ret == 0 || error("wrong DataSet or ANN sizes")
 end
 
-#  ~~~~~~ Prediction ~~~~~~~~~
-function predict{T}(ann::ANN, X::Matrix{T})
+
+# ~~~~~~ Prediction function ~~~~~~
+# Predict output on input X
+function predict{T<:FloatingPoint}(ann::ANN, X::Matrix{T})
 	nin, nobs = size(X)
-	# output vector
 	out = zeros(T, ann.nout, nobs)
 	for i = 1:nobs
 		out_ptr = ccall((:fann_run, libfann), 
