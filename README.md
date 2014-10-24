@@ -3,6 +3,7 @@ FANN
 
 A Julia wrapper for the Fast Artificial Neural Network C library (FANN)
 
+
 Installation
 ------------
 This package is not yet registered on METADATA, but it can be installed simply by running 
@@ -74,4 +75,9 @@ Note
 A minimal amount of the FANN library has been wrapped and most of the options have been left to the default values that the c library sets. New features of this wrapper will be slowly added, as it is required.
 
 
+Links
+-----
+See these two links for full documentation 
 
+https://github.com/libfann/fann
+http://leenissen.dk/fann/wp/
