@@ -33,7 +33,7 @@ Now we create a neural network, i.e. a multi-layer perceptron.
 
 	net = ANN([2, 5, 1], [:sigmoid_symmetric, :linear], b=0.1)
 
-First input is an array of Ints, with the number of nodes in each of the network layers. A bias node is also present in each layer except for the last one (see FANN documentation) The second input is an array of `n_layers-1` symbols that specifies the type of activation of the nodes in each layer except for the first one, which is always linear. Available activation functions are documented in src/constants.jl. The last parameter is a float that specifies the half-width of the interval around zero over which random initial values for the network weights are drawn.
+First input is an array of Ints, with the number of nodes in each of the network layers. A bias node is also present in each layer except for the last one (see FANN documentation). The second input is an array of `n_layers-1` symbols that specifies the type of activation of the nodes in each layer except for the first one, which is always linear. Available activation functions are documented in src/constants.jl. The last parameter is a float that specifies the half-width of the interval around zero over which random initial values for the network weights are drawn.
 
 The network can be trained as
 
@@ -57,7 +57,6 @@ but note that this mean square error is different to that obtained with
     
 since `mse` uses the internal tanh error function, that is default in the FANN c library. 
     
-
 Finally, networks can be saved and loaded to/from a file 
 
     save(net, "net.net")
@@ -66,7 +65,7 @@ Finally, networks can be saved and loaded to/from a file
 
 Note
 ----
-A minimal amount of the FANN library has been wrapped and most of the options arehave been left to the default value that the c library sets. New features of this wrapper will be slowly added, as it is required.
+A minimal amount of the FANN library has been wrapped and most of the options have been left to the default values that the c library sets. New features of this wrapper will be slowly added, as it is required.
 
 
 
