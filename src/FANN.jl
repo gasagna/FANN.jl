@@ -22,6 +22,6 @@ include("ann.jl")
 
 # exports
 export DataSet, save
-export ANN, train!, predict, save, load
+export ANN, train!, predict, mse, save, load
 
 end

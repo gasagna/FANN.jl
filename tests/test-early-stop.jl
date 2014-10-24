@@ -19,8 +19,8 @@ vset = DataSet(X[:, vidx], y[:, vidx])
 
 # train
 train!(net, tset, vset,
-	   max_epochs=10000, 
-	   epochs_between_reports=200,
+	   max_epochs=100, 
+	   epochs_between_reports=100,
 	   desired_error=1e-8, minratio=0.95)
 
 # how to test this behaviour? I should return a full 

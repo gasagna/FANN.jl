@@ -78,7 +78,7 @@ function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, des
 
 	# debug header
 	println("Epoch  Train MSE  Valid MSE  Tr/Val MSE Ratio")
-	println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	printprog(0, mse(ann, tset), vmse_curr)
 
 	for i = epochs_between_reports:epochs_between_reports:max_epochs
