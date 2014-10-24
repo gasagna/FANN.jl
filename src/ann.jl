@@ -68,6 +68,7 @@ load(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann),
 								    file))
 
 #  ~~~~~~ Training ~~~~~~~~~
+# General function
 function train!(ann::ANN, dset::DataSet; 
 				max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
 	# first check
@@ -77,6 +78,50 @@ function train!(ann::ANN, dset::DataSet;
 		  (Ptr{fann}, Ptr{fann_train_data}, Uint32, Uint32,  Cfloat),
 		  ann.ann, dset, max_epochs, epochs_between_reports, desired_error)
 end
+
+# Early-stop training with validation test
+function train!(ann::ANN, tset::DataSet, vset::DataSet; 
+			    max_epochs::Int=100, 
+				desired_error::Float64=1e-5, 
+				epochs_between_reports::Int=10, 
+				minratio::Float64=0.95)
+	# run ann on validation set to have first value 
+	vmse_last = 0.0f0
+	vmse_curr = mse(ann, vset)
+
+	# debug header
+	println("Epoch  Train MSE  Valid MSE  Tr/Val MSE Ratio")
+	println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	printprog(0, mse(ann, tset), vmse_curr)
+
+	for i = epochs_between_reports:epochs_between_reports:max_epochs
+		train!(ann, tset; 
+			   max_epochs=epochs_between_reports, 
+			   desired_error=desired_error, 
+			   epochs_between_reports=0)
+		# update validation error
+		vmse_curr, vmse_last = mse(ann, vset), vmse_curr
+		# update training error 
+		tmse_curr = mse(ann, tset)
+		# print progress
+		printprog(i, tmse_curr, vmse_curr)
+		# check converged
+		tmse_curr/vmse_curr < minratio && return nothing
+	end
+end
+
+# Print output
+function printprog(epoch, tmse, vmse)
+	a = @sprintf "%5d" epoch
+	b = @sprintf "%.3e" tmse
+	c = @sprintf "%.3e" vmse
+	r = @sprintf "%.3f" tmse/vmse
+	println(a, "  ", b, "  ", c, "  ", r)
+end
+
+# Compute mean square error on dataset
+mse(ann::ANN, dset::DataSet) = ccall((:fann_test_data, libfann), Cfloat, (Ptr{fann}, Ptr{fann_train_data}), ann, dset)
+
 
 function checksizes(ann::ANN, dset::DataSet)
 	# Check that sizes of DataSet and ANN match
