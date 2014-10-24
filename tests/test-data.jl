@@ -25,7 +25,7 @@ for i = 1:M
 end
 
 # 2)  try to save it and the read file
-save(dset, "here")
+savedset(dset, "here")
 data = readdlm("here")
 rm("here")
 

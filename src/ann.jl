@@ -55,8 +55,8 @@ destroy(ann::ANN) = ccall((:fann_destroy, libfann), Void, (_ANN,), ann)
 Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},), ann)
 
 # ~~~~~~ IO functions ~~~~~~~~
-save(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann), Cint, (Ptr{fann}, Ptr{Uint8}), ann, file)
-load(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fann},  (Ptr{Uint8},), file))
+savenet(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann), Cint, (Ptr{fann}, Ptr{Uint8}), ann, file)
+loadnet(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fann}, (Ptr{Uint8},), file))
 
 
 # ~~~~~~ Training funcs ~~~~~~
