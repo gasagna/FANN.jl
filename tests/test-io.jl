@@ -10,8 +10,8 @@ Y = [0.0 1.0]
 train!(net, DataSet(X, Y), max_epochs=10000, epochs_between_reports=0)
 
 # save and load 
-save(net, "net")
-net2 = load("net")
+savenet(net, "net")
+net2 = loadnet("net")
 rm("net")
 
 # should be the same prediction
