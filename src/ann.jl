@@ -14,14 +14,15 @@ type ANN
 		finalizer(ann, destroy)
 		ann
 	end
-	function ANN(layers::Vector{Int}, activation::Vector{Symbol}; b::Float64=0.1)
-		# Artificial Neural Network 
+	function ANN(layers::Vector{Int}, activation::Vector{Symbol}; b::Float64=0.1, errorfunc::Symbol=:tanh)
+		# Artificial Neural Network type
 		# 
 		# Parameters
 		# ----------
 		# layers : number of nodes for each layer
-		# activation : array of symbols with activation function for each layer excluded the input
+		# activation : array of symbols with activation function for each layer excluded the input layer
 		# b : [-b, b] defines the range for random initialisation of the weights
+		# errorfunc : the error function used for training
 
 		# activation function for hidden and output layers
 		length(activation) == length(layers) - 1 || error("wrong dimension of activation function vector ")
@@ -46,6 +47,11 @@ type ANN
        		  Void,
        		  (Ptr{fann}, fann_type, fann_type),
        		  ann, -b, b)
+       	# set train error function
+       	ccall((:fann_set_train_error_function, libfann), 
+       		  Void, 
+       		  (Ptr{fann}, fann_errorfunc_enum),
+       		  ann, errorfunc2uint(errorfunc))
 		ANN(ann)
 	end
 end

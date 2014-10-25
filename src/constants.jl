@@ -36,5 +36,12 @@ function act2uint(activation::Symbol)
 end
 	
 
+# choose error function
+const errorfunc_dict = [ :linear => (uint32)(0),
+						 :tanh   => (uint32)(1)]
 
+function errorfunc2uint(errorfunc::Symbol)
+	haskey(errorfunc_dict, errorfunc) || error("errorfunc function $errorfunc not available")
+	return errorfunc_dict[errorfunc]
+end
 

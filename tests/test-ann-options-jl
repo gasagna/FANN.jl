@@ -1,0 +1,5 @@
+using FANN
+using Base.Test
+
+net = ANN([2, 1], [:linear], b=0.1, errorfunc=:tanh)
+show(net)
