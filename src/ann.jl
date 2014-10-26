@@ -65,7 +65,32 @@ savenet(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann), Cint, (Ptr{f
 loadnet(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fann}, (Ptr{Uint8},), file))
 
 
-# ~~~~~~ Training funcs ~~~~~~
+# ~~~~~~~~~ Tranining algorithms ~~~~~~~~~~~~~
+
+# QuickProp training algorithm
+function setup_qprop!(ann::ANN; mu::Float64=1.75, decay::Float64=-0.0001)
+    ccall((:fann_set_training_algorithm, libfann), Void, (Ptr{fann}, fann_train_enum), ann, FANN_TRAIN_QUICKPROP)
+    ccall((:fann_set_quickprop_mu,       libfann), Void, (Ptr{fann}, Cfloat), ann, mu)
+    ccall((:fann_set_quickprop_decay,    libfann), Void, (Ptr{fann}, Cfloat), ann, decay)
+end
+
+# Rprop training algorithm, this is the default one
+function setup_rprop!(ann::ANN; increase_factor::Float64=1.2, decrease_factor::Float64=0.5, delta_min::Float64=0.0, delta_max::Float64=50.0, delta_zero::Float64=0.1)
+	ccall((:fann_set_training_algorithm, libfann), Void, (Ptr{fann}, fann_train_enum), ann, FANN_TRAIN_RPROP)
+	ccall((:fann_set_rprop_increase_factor, libfann), Void, (Ptr{fann}, Cfloat), ann, increase_factor)
+	ccall((:fann_set_rprop_decrease_factor, libfann), Void, (Ptr{fann}, Cfloat), ann, decrease_factor)
+	ccall((:fann_set_rprop_delta_min,       libfann), Void, (Ptr{fann}, Cfloat), ann, delta_min)
+	ccall((:fann_set_rprop_delta_max,       libfann), Void, (Ptr{fann}, Cfloat), ann, delta_max)
+	ccall((:fann_set_rprop_delta_zero,      libfann), Void, (Ptr{fann}, Cfloat), ann, delta_zero)
+end
+
+# Standard backpropagation - batch or incremental
+function setup_bprop!(ann::ANN; batch::Bool=true, learning_rate::Float64=0.7, learning_momentum::Float64=0.0)
+	ccall((:fann_set_training_algorithm, libfann), Void, (Ptr{fann}, fann_train_enum), ann, batch == true ? FANN_TRAIN_BATCH : FANN_TRAIN_INCREMENTAL)
+	ccall((:fann_set_learning_rate,      libfann), Void, (Ptr{fann}, Cfloat), ann, learning_rate)
+	ccall((:fann_set_learning_momentum,  libfann), Void, (Ptr{fann}, Cfloat), ann, learning_momentum)
+end
+
 # Standard training function
 function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
 	# first check
