@@ -16,12 +16,13 @@ end
 include("libfann_common.jl")
 
 # load files
-include("constants.jl")
 include("data.jl")
 include("ann.jl")
+include("constants.jl")
 
 # exports
 export DataSet, savedset, loaddset
 export ANN, train!, predict, mse, savenet, loadnet
+export setup_qprop!, setup_rprop!, setup_bprop!
 
 end

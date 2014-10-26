@@ -1,8 +1,7 @@
 TODO
 ----
 
-# add error fucntion choice
-# add training algorithm choice
+# improve output duing training
 # add show for DataSet and ANN
 
 # understand why linear problem stops earlier and desired error is not reached
