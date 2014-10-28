@@ -223,6 +223,7 @@ type fann
     scale_factor_out::Ptr{Cfloat}
 end
 
+
 type fann_train_data
     errno_f::fann_errno_enum
     error_log::Ptr{FILE}
