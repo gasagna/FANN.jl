@@ -14,7 +14,7 @@ type ANN
 		finalizer(ann, destroy)
 		ann
 	end
-	function ANN(layers::Vector{Int}, activation::Vector{Symbol}; b::Float64=0.1, errorfunc::Symbol=:tanh)
+	function ANN(layers::Vector{Int}, activation::Vector{Symbol}; b::Float64=0.1, errorfunc::Symbol=:tanh, steepness::Float64=1.0)
 		# Artificial Neural Network type
 		# 
 		# Parameters
@@ -23,6 +23,7 @@ type ANN
 		# activation : array of symbols with activation function for each layer excluded the input layer
 		# b : [-b, b] defines the range for random initialisation of the weights
 		# errorfunc : the error function used for training
+		# steepness : The value of the steepness for all layers
 
 		# activation function for hidden and output layers
 		length(activation) == length(layers) - 1 || error("wrong dimension of activation function vector ")
@@ -35,12 +36,16 @@ type ANN
 		if ann == C_NULL
             error("Error in fann_create_standard_array")
         end
-        # set activation function for each layer
+        # set activation function and steepness for each layer
         for layer = 1:length(layers)-1
             ccall((:fann_set_activation_function_layer, libfann), 
             	  Void,
             	  (Ptr{fann}, fann_activationfunc_enum, Cint), 
             	  ann, act2uint(activation[layer]), layer)
+            ccall((:fann_set_activation_steepness_layer, libfann), 
+       			  Void, 
+       			  (Ptr{fann}, fann_type, Cint),
+       			  ann, steepness, layer)
         end
         # randomize weights
        	ccall((:fann_randomize_weights, libfann),

@@ -45,9 +45,9 @@ Artificial Neural Network
 -------------------------
 Now we create a neural network, i.e. a multi-layer perceptron.
 
-	net = ANN([5, 5, 1], [:sigmoid_symmetric, :linear]; b=0.1, errorfunc=:tanh)
+	net = ANN([5, 5, 1], [:sigmoid_symmetric, :linear]; b=0.1, errorfunc=:tanh, steepness=1.0)
 
-The first input is an array of Ints, with the number of nodes in each of the network layers. A bias node is also present in each layer except for the last one (see FANN documentation). The second input is an array of `n_layers-1` symbols that specifies the type of activation of the nodes in each layer except for the first one, which is always linear. Available activation functions are documented in src/constants.jl. The third parameter `b` is a float that specifies the half-width of the interval around zero over which random initial values for the network weights are drawn. The last argument to `ANN` is a symbol that specifies the type of error function used for training, it can be either `:tanh` (default) or `:linear`.
+The first input is an array of Ints, with the number of nodes in each of the network layers. A bias node is also present in each layer except for the last one (see FANN documentation). The second input is an array of `n_layers-1` symbols that specifies the type of activation of the nodes in each layer except for the first one, which is always linear. Available activation functions are documented in src/constants.jl. The third parameter `b` is a float that specifies the half-width of the interval around zero over which random initial values for the network weights are drawn. The fourth argument to `ANN` is a symbol that specifies the type of error function used for training, it can be either `:tanh` (default) or `:linear`. The last parameter specifies the steepness of the activation functions of each layer, except the input layer.
 
 The network can be trained as
 
