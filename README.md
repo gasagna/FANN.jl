@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gasagna/FANN.jl.svg?branch=master)](https://travis-ci.org/gasagna/FANN.jl)
+
 FANN
 ====
 
@@ -101,4 +103,9 @@ Links
 See these two links for full documentation 
 
 https://github.com/libfann/fann
+
 http://leenissen.dk/fann/wp/
+
+Author
+------
+This wrapper was written by Davide Lasagna
