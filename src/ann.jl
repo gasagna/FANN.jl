@@ -118,6 +118,9 @@ end
 function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_checks::Int=10, minratio::Float64=0.95)
 	# check this. Otherwise what is the point of checking?
 	epochs_between_checks > 0 || error("error_between_checks must be greater than one")
+	
+	# check sizes
+	checksizes(ann, tset); checksizes(ann, vset)
 
 	# run ann on validation set to have first value 
 	vmse_curr, vmse_last= mse(ann, vset), 0.0f0
