@@ -60,13 +60,13 @@ Base.convert(::Type{_ANN}, ann::ANN) = ann.ann
 destroy(ann::ANN) = ccall((:fann_destroy, libfann), Void, (_ANN,), ann)
 Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},), ann)
 
+
 # ~~~~~~ IO functions ~~~~~~~~
 savenet(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann), Cint, (Ptr{fann}, Ptr{Uint8}), ann, file)
 loadnet(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fann}, (Ptr{Uint8},), file))
 
 
 # ~~~~~~~~~ Tranining algorithms ~~~~~~~~~~~~~
-
 # QuickProp training algorithm
 function setup_qprop!(ann::ANN; mu::Float64=1.75, decay::Float64=-0.0001)
     ccall((:fann_set_training_algorithm, libfann), Void, (Ptr{fann}, fann_train_enum), ann, FANN_TRAIN_QUICKPROP)
@@ -122,21 +122,16 @@ function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Flo
 	end 
 end
 
-
 # Early-stop training with validation test
 function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_checks::Int=10, minratio::Float64=0.95)
 	# check this. Otherwise what is the point of checking?
 	epochs_between_checks > 0 || error("error_between_checks must be greater than one")
-	
 	# check sizes
 	checksizes(ann, tset); checksizes(ann, vset)
-
 	# run ann on validation set to have first value 
 	vmse_curr, vmse_last= mse(ann, vset), 0.0f0
-
 	# debug header
 	printprog(0, mse(ann, tset), vmse_curr)
-
 	for i = epochs_between_checks:epochs_between_checks:max_epochs
 		train!(ann, tset; 
 			   max_epochs=epochs_between_checks, 
