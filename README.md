@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/gasagna/FANN.jl.svg?branch=master)](https://travis-ci.org/gasagna/FANN.jl)
-
+[![Coverage Status](https://coveralls.io/repos/gasagna/FANN.jl/badge.png)](https://coveralls.io/r/gasagna/FANN.jl)
 FANN
 ====
 
