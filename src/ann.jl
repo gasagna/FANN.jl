@@ -95,24 +95,33 @@ end
 function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
 	# first check size
 	checksizes(ann, dset)
-
+	# verbosity
+	isverbose = epochs_between_reports > 0
+	# specify number of epoch in each iteration between reports
+	epochs_between_reports < 0 && error("epochs_between_reports cannot be less than 0")
+	nepochs = epochs_between_reports == 0 ? max_epochs : epochs_between_reports
 	# debug header only if verbose 
-	epochs_between_reports > 0 && printprog(0, mse(ann, dset))
-
-	# specify iterations 
-	epochs_between_reports == 0 && (range = max_epochs:max_epochs)
-	epochs_between_reports >  0 && (range = epochs_between_reports:epochs_between_reports:max_epochs)
-	epochs_between_reports == 0 && (nepochs = max_epochs)
-	epochs_between_reports >  0 && (nepochs = epochs_between_reports)
-
-	for i in range    
+	isverbose && printprog(0 , mse(ann, dset))
+	# init training epochs
+	epoch = 0
+	while true
+		# train for nepochs
 		ccall((:fann_train_on_data, libfann),
 		  	  Void,
 		  	  (Ptr{fann}, Ptr{fann_train_data}, Uint32, Uint32,  Cfloat),
 		  	  ann, dset, nepochs, 0, desired_error)
-		epochs_between_reports > 0 && printprog(i, mse(ann, dset))
+		# update nepochs
+		epoch += nepochs
+		# get error
+		tmse = mse(ann, dset)
+		# print progress
+		isverbose && printprog(epoch, tmse)
+		# exit condition
+		tmse < desired_error && break
+		epoch >= max_epochs  && break
 	end 
 end
+
 
 # Early-stop training with validation test
 function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_checks::Int=10, minratio::Float64=0.95)
