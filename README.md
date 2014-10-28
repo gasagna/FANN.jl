@@ -63,9 +63,9 @@ Early stopping
 --------------
 A simple form of early stopping to avoid over-fitting has been implemented. Suppose, the training and validation datasets `tset` and `vset` are available. Then the network can be trained with
 
-    train!(net, tset, vset; max_epochs=100, desired_error=1e-5, epochs_between_reports, minratio=0.95)
+    train!(net, tset, vset; max_epochs=100, desired_error=1e-5, epochs_between_checks=10, minratio=0.95)
     
-with the additional optional parameter `minratio` to control early stopping. Typically, when over-fitting occurs the error on the training set decreases whereas the error on the validation set increases. The ratio between the errors on the training and the validation sets is evaluated every `epochs_between_reports` and if it is smaller then `minratio` the training is halted.
+with the additional optional parameter `minratio` to control early stopping. Typically, when over-fitting occurs the error on the training set decreases whereas the error on the validation set increases. The ratio between the errors on the training and the validation sets is evaluated every `epochs_between_checks` and if it is smaller then `minratio` the training is halted.
 
 Prediction
 ----------
