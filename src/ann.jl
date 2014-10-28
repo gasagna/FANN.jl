@@ -93,28 +93,41 @@ end
 
 # Standard training function
 function train!(ann::ANN, dset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10)
-	# first check
+	# first check size
 	checksizes(ann, dset)
-	ccall((:fann_train_on_data, libfann),
-		  Void,
-		  (Ptr{fann}, Ptr{fann_train_data}, Uint32, Uint32,  Cfloat),
-		  ann.ann, dset, max_epochs, epochs_between_reports, desired_error)
+
+	# debug header only if verbose 
+	epochs_between_reports > 0 && printprog(0, mse(ann, dset))
+
+	# specify iterations 
+	epochs_between_reports == 0 && (range = max_epochs:max_epochs)
+	epochs_between_reports >  0 && (range = epochs_between_reports:epochs_between_reports:max_epochs)
+	epochs_between_reports == 0 && (nepochs = max_epochs)
+	epochs_between_reports >  0 && (nepochs = epochs_between_reports)
+
+	for i in range    
+		ccall((:fann_train_on_data, libfann),
+		  	  Void,
+		  	  (Ptr{fann}, Ptr{fann_train_data}, Uint32, Uint32,  Cfloat),
+		  	  ann, dset, nepochs, 0, desired_error)
+		epochs_between_reports > 0 && printprog(i, mse(ann, dset))
+	end 
 end
 
 # Early-stop training with validation test
-function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_reports::Int=10, minratio::Float64=0.95)
+function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, desired_error::Float64=1e-5, epochs_between_checks::Int=10, minratio::Float64=0.95)
+	# check this. Otherwise what is the point of checking?
+	epochs_between_checks > 0 || error("error_between_checks must be greater than one")
+
 	# run ann on validation set to have first value 
-	vmse_last = 0.0f0
-	vmse_curr = mse(ann, vset)
+	vmse_curr, vmse_last= mse(ann, vset), 0.0f0
 
 	# debug header
-	println("Epoch  Train MSE  Valid MSE  Tr/Val MSE Ratio")
-	println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	printprog(0, mse(ann, tset), vmse_curr)
 
-	for i = epochs_between_reports:epochs_between_reports:max_epochs
+	for i = epochs_between_checks:epochs_between_checks:max_epochs
 		train!(ann, tset; 
-			   max_epochs=epochs_between_reports, 
+			   max_epochs=epochs_between_checks, 
 			   desired_error=desired_error, 
 			   epochs_between_reports=0)
 		# update validation error
@@ -128,8 +141,16 @@ function train!(ann::ANN, tset::DataSet, vset::DataSet; max_epochs::Int=100, des
 	end
 end
 
-# Print output
+# Print output (can be done better though)
+function printprog(epoch, tmse)
+	epoch == 0 && println("Epoch  Train MSE\n~~~~~~~~~~~~~~~~")
+	a = @sprintf "%5d" epoch
+	b = @sprintf "%.3e" tmse
+	println(a, "  ", b)
+end
+
 function printprog(epoch, tmse, vmse)
+	epoch == 0 && println("Epoch  Train MSE  Valid MSE  Ratio\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	a = @sprintf "%5d" epoch
 	b = @sprintf "%.3e" tmse
 	c = @sprintf "%.3e" vmse
