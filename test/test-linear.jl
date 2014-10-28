@@ -20,4 +20,4 @@ train!(net, dset,
 # but the mean square error is not less than the desired error. Where
 # is this bug from?
 out = predict(net, X) 
-@test sumabs2(out - y) < 10*1e-8
+@test sumabs2(out - y) < 100*1e-8

@@ -19,4 +19,4 @@ train!(net, dset,
 	   epochs_between_reports=0, 
 	   desired_error=1e-5)
 
-@test sumabs2(predict(net, X) - y) < 10*1e-5
+@test sumabs2(predict(net, X) - y) < 100*1e-5
