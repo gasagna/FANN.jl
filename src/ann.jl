@@ -70,7 +70,6 @@ Base.show(ann::ANN) = ccall((:fann_print_parameters, libfann), Void, (Ptr{fann},
 savenet(ann::ANN, file::ASCIIString) = ccall((:fann_save, libfann), Cint, (Ptr{fann}, Ptr{Uint8}), ann, file)
 loadnet(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fann}, (Ptr{Uint8},), file))
 
-
 # ~~~~~~~~~ Tranining algorithms ~~~~~~~~~~~~~
 # QuickProp training algorithm
 function setup_qprop!(ann::ANN; mu::Float64=1.75, decay::Float64=-0.0001)
