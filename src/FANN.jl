@@ -22,7 +22,7 @@ include("constants.jl")
 
 # exports
 export DataSet, savedset, loaddset
-export ANN, train!, predict, mse, savenet, loadnet
+export ANN, train!, predict, mse, savenet, loadnet, weights, weights!
 export setup_qprop!, setup_rprop!, setup_bprop!
 
 end
