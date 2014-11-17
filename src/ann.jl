@@ -74,9 +74,9 @@ loadnet(file::ASCIIString) = ANN(ccall((:fann_create_from_file, libfann), Ptr{fa
 nweights(ann::ANN) = int(ccall((:fann_get_total_connections, libfann), Uint32, (Ptr{fann},), ann))
 
 function weights(ann::ANN)
-	weights = Array(Float64, nweights(ann))
-	ccall((:fann_get_weights, libfann), Void, (Ptr{fann}, Ptr{fann_type}), ann, weights)
-	return weights
+	w = Array(Float64, nweights(ann))
+	ccall((:fann_get_weights, libfann), Void, (Ptr{fann}, Ptr{fann_type}), ann, w)
+	return w
 end
 
 function weights!(ann::ANN, weights::Vector{Float64})
