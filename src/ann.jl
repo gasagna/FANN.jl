@@ -209,3 +209,9 @@ function predict{T<:FloatingPoint}(ann::ANN, X::Matrix{T})
 	end
 	return out
 end
+
+predict{T<:FloatingPoint}(ann::ANN, X::Vector{T}) = 
+	pointer_to_array(ccall((:fann_run, libfann), 
+					 Ptr{fann_type},
+					 (Ptr{fann}, Ptr{fann_type}),
+					 ann, X), ann.nout)
